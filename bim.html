@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap">
+  <!-- <link rel="stylesheet" href="./src/font/font.css"> -->
+  <link rel="stylesheet" href="./src/styles.css">
+  <!-- <link rel="icon" type="image/x-icon" href="./src/favicon.ico"> -->
+  <title>Tools Component</title>
+</head>
+<body>
+<div class="full-screen" id="container"></div>
+<script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.152.2/build/three.module.js",
+        "stats.js/src/Stats.js": "https://unpkg.com/stats-js@1.0.1/src/Stats.js",
+        "openbim-components": "./src/openbim-components.js",
+        "GLTFLoader":"./src/GLTFLoader.js",
+        "three/addons/": "https://unpkg.com/three@0.152.2/examples/jsm/"
+      }
+    }
+</script>
+
+<script type="module">
+        // "GLTFLoader":"https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/loaders/GLTFLoader.js"
+
+        // 'GLTFLoader':'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/loaders/GLTFLoader.js';
+	import Stats from 'stats.js/src/Stats.js';
+
+	/*MD
+  ### 🌍 Let's create a 3D world!
+  ___
+  The `SimpleScene` component is the easiest way to create a 3D space to start working.
+  Let's start by importing Components and Three.js:
+  */
+
+	import * as THREE from 'three';
+	import * as OBC from 'openbim-components';
+  import { GLTFLoader } from "GLTFLoader"
+  import { DragControls } from 'three/addons/controls/DragControls.js';
+  import { TransformControls } from 'three/addons/controls/TransformControls.js';
+  // import { DragControls } from 'three/addons/controls/DragControls.js';
+
+
+	/*MD
+  Now, the first step is getting a container for our viewer. 📦
+  This is just a place where the 3D scene will be rendered.
+  In this example we have just added an HTML `div` element with
+  the ID `"container"`.
+  */
+
+	const container = document.getElementById('container');
+
+	/*MD
+	 Now, let's create an awesome 3D scene inside that HTML element! 🔥
+
+  :::info Are you using a library/framework like React, Angular or vue?
+
+  Then probably you have other mechanisms for getting a reference to the
+  HTML div element. However you do it, as long as you get a reference
+  in your code, you are good to go!
+
+  :::
+
+  ### 🧰 Setting up a components project
+  ___
+  Next, we will instantiate the main object of the library: **[Components](../api/classes/components.Components)**. 🤖
+  This object will keep track of all the components that you create, making them
+  easily accessible in all your application and making sure to update them
+  in each frame, so you don't have to worry about that. 💪
+
+  :::danger The minimum components application
+
+  Any components app needs 4 things to work:
+  - 🌍 A **[scene component](../api/classes/components.SimpleScene)** where our objects will live in 3D.
+  - ⌚ A **[renderer component](../api/classes/components.SimpleRenderer)** that allows us to see things moving around.
+  - 🎥 A **[camera component](../api/classes/components.SimpleCamera)** that defines where we are and in that 3D world.
+  - ⚡ A **[raycaster component](../api/classes/components.SimpleRaycaster)** that makes it possible to interact with
+  that 3D scene with our mouse / touch.
+
+  :::
+  */
+
+	const components = new OBC.Components();
+	components.scene = new OBC.SimpleScene(components);
+	components.renderer = new OBC.PostproductionRenderer(components, container);
+	components.camera = new OBC.SimpleCamera(components);
+	components.raycaster = new OBC.SimpleRaycaster(components);
+  const controls = components.camera.controls;
+  let cameraControls = controls
+  let dragControls = null
+  
+
+	/*MD
+  Now that everything is set up, let's start the app! You can do that with the `init` method.
+  It will start updating all the components at 60 fps, so that you don't have to worry about the
+  animation loop: 🚗💨💨💨
+  */
+
+	components.init();
+  function initControls() {
+    const sc = components.scene.get()
+    let target = sc.children.find(i => {
+      console.log(i.name, i);
+      return i.name == 'moveable'
+    })
+    console.log(sc.children);
+    if (!target) {
+      return 
+    }
+    dragControls = new DragControls([target], components.camera.get(), container);
+    dragControls.transformGroup = true
+
+    dragControls.addEventListener('dragstart', function (event) {
+      cameraControls.enabled =false;
+      console.log(event);
+      if(event.object.children) {
+        event.object.children.forEach(item => {
+          item?.material?.emissive?.set(0xaaaaaa);
+        })
+      }
+      // event.object.material.emissive.set(0xaaaaaa);
+    });
+
+    dragControls.addEventListener('dragend', function (event) {
+      // event.object.material.emissive.set(0x000000);
+      cameraControls.enabled =true;
+      // transformControl.detach();
+      // trackballControls.enabled = true;
+      if(event.object.children) {
+        event.object.children.forEach(item => {
+          item?.material?.emissive?.set(0x000000);
+        })
+      }
+    });
+    function onContextMenu(event) {
+      event.preventDefault(); // 阻止默认事件
+    }
+    container.addEventListener('contextmenu', onContextMenu)
+
+    //拖拽控件对象设置鼠标事件
+    // dragControls.addEventListener( 'hoveron', function ( event )     {
+    //     //控件对象transformControl与选中的对象object绑定
+    //     transformControl.attach( event.object );
+    // } );
+    cameraControls = controls;
+  }
+
+
+	/*MD
+  And that's it! You already have set up 3D scene that can run on any device. Easy, right? 🥳 But right now or scene
+  is not very interesting, as it's only a infinite white void. Let's add some things to it! First, we need a reference
+  to the scene, which you can get with the `get()` method. This method is present in all the components and is used to
+  get the core of the component. We can do it like this:
+  */
+
+
+
+	const scene = components.scene.get();
+
+  // let transformControl = new TransformControls( components.camera.get(), container );
+  // scene.add( transformControl );//控件对象添加到场景对象
+
+	/*MD
+	### 🎥 Adjusting scene and camera
+  ___
+  Great! Now we will locate the camera in a nice starting position. We can control the `SimpleCamera` component through its
+  `controls` attribute. This object is an instance of the [camera-controls](https://github.com/yomotsu/camera-controls)
+  library, which makes it super easy to control the camera in our 3D scene. We will set the position of the camera
+  to `[10, 10, 10]` and make it look at the origin (`[0, 0, 0]`).
+  */
+
+	components.camera.controls.setLookAt(10, 10, 10, 0, 0, 0);
+
+  
+	/*MD
+	### 🏀 Adding some 3D objects
+  ___
+  Awesome! We are now ready to start adding some objects. First, we will add a
+  **[simple grid component](../api/classes/components.SimpleGrid)**. As the name implies, this component adds a simple
+  2D grid to the scene that we can use as a reference.
+
+  */
+  const grid = new OBC.SimpleGrid(components);
+  grid.fade = false
+  console.log(grid);
+  components.tools.add("grid", grid);
+
+    
+  // components.renderer.postproduction.enabled = true;
+  console.log(components.renderer);
+  console.log(components.renderer.postproduction);
+
+  /*MD
+  :::tip Adding it to the tools component
+
+  The Tools Component will help you keep your code tidy. For more information about the Tools component, check out
+  [its own tutorial](./ToolsComponent.mdx). 🔍
+
+  :::
+
+  🚀 Also, let's add some real geometry to our small 3D app. All the components are built on top of
+  [Three.js](https://threejs.org/), which means that Three.js code will work natively with them.
+  This is great, because you can easily integrate components with any 3D app that you create.
+
+  Let's try it by adding a simple cube:
+  */
+  // let postproduction = new OBC.PostproductionRenderer(components, container)
+  // postproduction.postproduction.enabled = true
+  components.renderer.postproduction.enabled = true;
+  const postproduction = components.renderer.postproduction;
+  postproduction.customEffects.excludedMeshes.push(grid.get());
+  // console.log(postproduction.postproduction);
+
+// GLTFLoader
+  console.log(THREE);
+  const loader = new GLTFLoader();
+  loader.load(
+    './src/SheenChair.glb',
+    function (gltf) {
+      const model = gltf.scene;
+      // let group = new THREE.Group();
+    
+      console.log(model);
+      model.scale.set(0.5, 0.5, 0.5);
+
+      // 可选：调整模型的位置、旋转或缩放
+      model.position.set(2, 0, 2);
+      model.rotation.set(0, Math.PI / 2, 0);
+      postproduction.customEffects.excludedMeshes.push(model)
+      // group.add(model);
+      model.name = 'moveable';
+      scene.add(model);
+      console.log(dragControls);
+      // dragControls.add(group)
+      initControls()
+      // model.scale.set(1, 1, 1);
+    },
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total * 100) + '% 已加载');
+      // console.log(xhr.loaded / xhr.total);
+     
+    },
+    function (error) {
+      console.error('加载错误：', error);
+    }
+  );
+
+
+  let fragments = new OBC.FragmentManager(components);
+  // 高亮
+  const highlighter = new OBC.FragmentHighlighter(components, fragments)
+  // FragmentExploder
+  const classifier = new OBC.FragmentClassifier(components, fragments);
+  // 填充
+  // highlighter.fillEnabled= false
+  // 定位到
+  highlighter.zoomToSelection= false
+  const highlightMaterial = new THREE.MeshBasicMaterial({
+    color: '#BCF124',
+    depthTest: false,
+    opacity: 0.8,
+    transparent: true
+  });
+  let lastSelection;
+  let singleSelection = {
+    value: true,
+  };
+  highlighter.add('default', highlightMaterial);
+  highlighter.outlineMaterial.color.set(0xf0ff7a);
+  highlighter.setup();
+
+  let fragmentIfcLoader = new OBC.FragmentIfcLoader(components, fragments);
+  const fragmentBbox = new OBC.FragmentBoundingBox(components);
+
+  let modelArray = []
+
+
+  
+  fragmentIfcLoader.settings.wasm = {
+    path: "https://unpkg.com/web-ifc@0.0.43/",
+    absolute: true
+  }
+  fragmentIfcLoader.settings.webIfc.COORDINATE_TO_ORIGIN = true;
+  fragmentIfcLoader.settings.webIfc.OPTIMIZE_PROFILES = true;
+  
+  // console.log(fragmentIfcLoader);
+  // console.log(components, components.renderer);
+  const propsProcessor = new OBC.IfcPropertiesProcessor(components)
+  propsProcessor.uiElement.get("propertiesWindow").visible = true
+  let propertiesWindow = propsProcessor.uiElement.get("propertiesWindow")
+  console.log(propertiesWindow);
+
+  propertiesWindow.title = 'Properties'
+
+  async function loadIfcAsFragments(path) {
+    // const file = await fetch('./src/3f.ifc');
+    const file = await fetch(path);
+    const data = await file.arrayBuffer();
+    const buffer = new Uint8Array(data);
+    const model = await fragmentIfcLoader.load(buffer);
+
+    console.log(model,path);
+    //  点击高亮
+    fragments.load(buffer);
+
+    components.renderer.postproduction.customEffects.outlineEnabled = true;
+    highlighter.update();
+    highlighter.outlinesEnabled = true;
+
+    propsProcessor.process(model);
+
+    // FragmentExploder
+    classifier.byStorey(model);
+    // tree
+    classifier.byEntity(model)
+
+    //边界框
+    fragmentBbox.add(model);
+    // const bbox = fragmentBbox.getMesh();
+    // fragmentBbox.reset();
+
+    modelArray.push(model)
+    // 
+    scene.add(model);
+  }
+
+  // 
+  function importExternalFragment() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".ifc";
+    input.onchange = async () => {
+      const file = input.files[0];
+      if(file.name.includes(".ifc")) {
+        const url = URL.createObjectURL(file);
+        await loadIfcAsFragments(url)
+        // const result = await fetch(url);
+        // const data = await result.arrayBuffer();
+        // const buffer = new Uint8Array(data);
+        // fragments.load(buffer);
+      }
+      input.remove();
+    }
+    input.click();
+  }
+  
+
+
+  async function loadIFCFragment() {
+    const highlighter = new OBC.FragmentHighlighter(components, fragments);
+    const file = await fetch("./src/small.frag");
+    const dataBlob = await file.arrayBuffer();
+    const buffer = new Uint8Array(dataBlob);
+    fragments.load(buffer);
+    highlighter.update();
+    components.renderer.postproduction.customEffects.outlineEnabled = true;
+    highlighter.outlinesEnabled = true;
+  }
+  // await loadIFCFragment()
+  // await loadIfcAsFragments()
+
+
+
+  // controls.fitToSphere(bbox, true);
+
+
+  const exploder = new OBC.FragmentExploder(components, fragments, classifier);
+
+  console.log(highlighter.events);
+  console.log(highlighter);
+
+  const highlighterEvents = highlighter.events;
+    highlighterEvents.select.onClear.add(() => {
+      propsProcessor.cleanPropertiesList();
+    });
+    highlighterEvents.select.onHighlight.add(
+      (selection) => {
+        const fragmentID = Object.keys(selection)[0];
+        const expressID = Number([...selection[fragmentID]][0]);
+        let model
+        for (const group of fragments.groups) {
+          const fragmentFound = Object.values(group.keyFragments).find(id => id === fragmentID)
+          if (fragmentFound) model = group;
+        }
+        propsProcessor.renderProperties(model, expressID);
+      }
+  );
+
+
+
+  // fragments.load(buffer);
+  //   highlighter.update();
+  //   highlighter.outlinesEnabled = true;
+  //   console.log(components.renderer.postproduction);
+  //   components.renderer.postproduction.customEffects.outlineEnabled = true;
+
+  async function highlightOnClick(event) {
+    // event.stopPropagation()
+    // event.preventDefault()
+    const result = await highlighter.highlight('select', singleSelection.value);
+    console.log(result,singleSelection.value,lastSelection,highlighter);
+    if (result) {
+      lastSelection = {};
+      for (const fragment of result.fragments) {
+        const fragmentID = fragment.id;
+        lastSelection[fragmentID] = [result.id];
+      }
+    }
+  }
+  container.addEventListener('click', (event) => highlightOnClick(event));
+
+  // 射线拾取
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  let selectedObject = null;
+  function onMouseMove(event) {
+    // 计算鼠标位置转换为 Three.js 世界坐标系
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  }
+
+  function onClick(event) {
+    // 更新射线的原点和方向
+    raycaster.setFromCamera(mouse, components.camera.get());
+
+    // 获取与射线相交的对象数组
+    const intersects = raycaster.intersectObjects(scene.children, true);
+    
+
+    // 如果有相交的对象，则将其旋转
+    if (intersects.length > 0) {
+      // transformControl.attach( event.object );
+      console.log(intersects);
+      if (selectedObject) {
+        selectedObject.material.emissive.set(0x000000);
+      }
+
+      selectedObject = intersects[0].object;
+
+      // 更改选中对象的状态
+      selectedObject.material.emissive.set(0xff0000);
+    }
+  }
+
+  // 监听鼠标移动和点击事件
+  // container.addEventListener('mousemove', onMouseMove, false);
+  // container.addEventListener('click', onClick, false);
+
+  // 添加鼠标事件监听器
+// let isDragging = false;
+// let previousMousePosition = {
+//   x: 0,
+//   y: 0,
+// };
+// components.renderer.domElement.addEventListener('mousedown', (event) => {
+//   isDragging = true;
+// });
+// components.renderer.domElement.addEventListener('mousemove', (event) => {
+//   if (isDragging) {
+//     const { x, y } = event;
+//     const deltaMove = {
+//       x: x - previousMousePosition.x,
+//       y: y - previousMousePosition.y,
+//     };
+
+//     // 通过调整模型的旋转角度实现转向
+//     const speed = 0.01;
+//     gltf.scene.rotation.y += deltaMove.x * speed;
+
+//     previousMousePosition = { x, y };
+//   }
+// });
+// components.renderer.domElement.addEventListener('mouseup', (event) => {
+//   isDragging = false;
+// });
+
+  // const culler = new OBC.ScreenCuller(components);
+  // container.addEventListener("mouseup", () => culler.needsUpdate = true);
+  // container.addEventListener("wheel", () => culler.needsUpdate = true);
+  // for(const fragment of model.items) {
+  //   culler.add(fragment.mesh);
+  // }
+  // culler.needsUpdate = true;
+
+  // modelTree
+  // const modelTree = new OBC.FragmentTree(components);
+  // await modelTree.init();
+  // modelTree.update(['storeys', 'entities']);
+  // modelTree.onSelected.add((filter) => {
+  //   highlighter.highlightByID('select', filter, true, true);
+  // });
+
+  // modelTree.onHovered.add((filter) => {
+  //   highlighter.highlightByID('hover', filter);
+  // });
+  // modelTree.onClear.add(() => {
+  //   highlighterEvents.select.onClear()
+  // });
+
+
+
+  const mainToolbar = new OBC.Toolbar(components);
+  components.ui.addToolbar(mainToolbar);
+
+  // const ifcButton = fragmentIfcLoader.uiElement.get("main");
+  // console.log(ifcButton,fragmentIfcLoader);
+  // mainToolbar.addChild(ifcButton);
+
+  // zoom
+  // const button = new OBC.Button(components);
+  // button.materialIcon = "zoom_in_map";
+  // button.tooltip = "Zoom to building"
+  // mainToolbar.addChild(button);
+  // button.onClick.add(() => {
+  //   console.log(bbox);
+  //   if (bbox) {
+  //     controls.fitToSphere(bbox, true);
+  //   }
+  // })
+
+  // import 
+  const openButton = new OBC.Button(components);
+  openButton.materialIcon = "folder_open";
+  openButton.tooltip = "Import model";
+  mainToolbar.addChild(openButton);
+  openButton.onClick.add(() => importExternalFragment());
+
+
+  
+  mainToolbar.addChild(propsProcessor.uiElement.get("main"));
+
+  // mainToolbar.addChild(modelTree.uiElement.get("main"));
+
+  mainToolbar.addChild(fragments.uiElement.get("main"))
+
+  console.log(exploder);
+  // console.log(modelTree);
+
+
+  const alertButton = new OBC.Button(components);
+  alertButton.materialIcon = "filter_list";
+  alertButton.tooltip = "explode";
+  mainToolbar.addChild(alertButton);
+  console.log(alertButton);
+  alertButton.onClick.add(() => {
+    if (alertButton.active) {
+      exploder.reset()
+      alertButton.active = false
+    }else {
+      exploder.explode()
+      alertButton.active = true
+    }
+  });
+
+  const clearButton = new OBC.Button(components);
+  clearButton.materialIcon = "clear";
+  clearButton.tooltip = "clear";
+  mainToolbar.addChild(clearButton);
+  console.log(clearButton);
+  clearButton.onClick.add(() => {
+    fragments.dispose();
+    // if (clearButton.active) {
+    //   exploder.reset()
+    //   alertButton.active = false
+    // }else {
+    //   exploder.explode()
+    //   alertButton.active = true
+    // }
+  });
+
+  // 按钮
+  // const mainToolbar = new OBC.Toolbar(components, { name: 'Main Toolbar', position: 'bottom' });
+  // components.ui.addToolbar(mainToolbar);
+  // const ifcButton = fragmentIfcLoader.uiElement.get("main");
+  // mainToolbar.addChild(ifcButton);
+
+
+  // const boxMaterial = new THREE.MeshStandardMaterial({ color: '#6528D7' });
+  // const boxGeometry = new THREE.BoxGeometry(3, 3, 3);
+	// const cube = new THREE.Mesh(boxGeometry, boxMaterial);
+	// cube.position.set(0, 1.5, 0);
+	// scene.add(cube);
+
+	/*MD
+	### 🔦 Lighting things up
+  ___
+  Of course, everything is black because we have no lights! Let's fix it by adding some basic illumination:
+  */
+
+	components.scene.setup();
+
+  // initControls()
+
+	/*MD
+  ### 🧹 Cleaning up
+  ___
+  As you might now, JavaScript has an automatic garbage collector that gets rid of the variables that you are no longer
+  using. Unfortunately, that's not the case for
+  [Three.js](https://threejs.org/docs/#manual/en/introduction/How-to-dispose-of-objects). But don't worry: components
+  takes care of this for you. When you are finished working with a `Components` instance, simply call
+  `components.dispose()` and we will clean everything up for you!
+
+  :::caution Watch your variables!
+
+  When you dispose the memory, make sure that you don't have any object or array referencing anything inside the
+  `Components` instance or this won't work, because JavaScript will detect that you are still using it!
+
+  :::
+
+  :::tip Using React, Angular, Vue...?
+
+  This topic is especially relevant in Single Page Application technologies because they never reload the page (which
+  would release all the memory automatically). If you are using some of these, make sure that you set up the disposing
+  logic to fire when you re-render the component that has the 3D app.
+
+  :::
+
+  And voilà! You have made your first 3D application using components. Easy, right? Of course, this is still far from a
+  full-fledged BIM app, but don't worry! Keep following our tutorials and your app will go from zero to hero in no time! 🚀
+  */
+
+	const stats = new Stats();
+	stats.showPanel(2);
+	document.body.append(stats.dom);
+	stats.dom.style.left = '0px';
+	components.renderer.onBeforeUpdate.add(() => stats.begin());
+	components.renderer.onAfterUpdate.add(() => stats.end());
+
+</script>
+</body>
+</html>
