@@ -1,4 +1,6 @@
-# The easiest way to run locally is to run a local server from the `example` directory. There are plenty of options. One uses Python's built in webserver:
+# 本地运行
+
+最简单的方式是在当前目录启动本地服务器，例如使用 Python 内置的 Web 服务器：
 
     cd example
 

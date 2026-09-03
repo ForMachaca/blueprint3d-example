@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport"
@@ -9,7 +9,7 @@
   <!-- <link rel="stylesheet" href="./src/font/font.css"> -->
   <link rel="stylesheet" href="./src/styles.css">
   <!-- <link rel="icon" type="image/x-icon" href="./src/favicon.ico"> -->
-  <title>Tools Component</title>
+  <title>BIM 工具组件</title>
 </head>
 <body>
 <div class="full-screen" id="container"></div>
@@ -526,7 +526,7 @@
   // import 
   const openButton = new OBC.Button(components);
   openButton.materialIcon = "folder_open";
-  openButton.tooltip = "Import model";
+  openButton.tooltip = "导入模型";
   mainToolbar.addChild(openButton);
   openButton.onClick.add(() => importExternalFragment());
 
@@ -544,7 +544,7 @@
 
   const alertButton = new OBC.Button(components);
   alertButton.materialIcon = "filter_list";
-  alertButton.tooltip = "explode";
+  alertButton.tooltip = "分解模型";
   mainToolbar.addChild(alertButton);
   console.log(alertButton);
   alertButton.onClick.add(() => {
@@ -559,7 +559,7 @@
 
   const clearButton = new OBC.Button(components);
   clearButton.materialIcon = "clear";
-  clearButton.tooltip = "clear";
+  clearButton.tooltip = "清除模型";
   mainToolbar.addChild(clearButton);
   console.log(clearButton);
   clearButton.onClick.add(() => {

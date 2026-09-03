@@ -685,7 +685,7 @@ $(document).ready(function() {
     },
     "items": [
       {
-        "item_name": "Window",
+        "item_name": "窗户",
         "item_type": 3,
         "model_url": "assets/js/whitewindow.js",
         "xpos": 534.9620937975317,
@@ -698,7 +698,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "Dresser - White",
+        "item_name": "梳妆台 - 白色",
         "item_type": 1,
         "model_url": "assets/js/we-narrow6white_baked.js",
         "xpos": 898.0548281668393,
@@ -711,7 +711,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "Bedside table - White",
+        "item_name": "床头柜 - 白色",
         "item_type": 1,
         "model_url": "assets/js/cb-archnight-white_baked.js",
         "xpos": 1001.0862865204286,
@@ -724,7 +724,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "Open Door",
+        "item_name": "打开的门",
         "item_type": 7,
         "model_url": "assets/js/open_door.js",
         "xpos": 745.2440185546875,
@@ -737,7 +737,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "Window",
+        "item_name": "窗户",
         "item_type": 3,
         "model_url": "assets/js/whitewindow.js",
         "xpos": 886.8841174461031,
@@ -750,7 +750,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "Window",
+        "item_name": "窗户",
         "item_type": 3,
         "model_url": "assets/js/whitewindow.js",
         "xpos": 295.1400146484375,
@@ -763,7 +763,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "Blue Rug",
+        "item_name": "蓝色地毯",
         "item_type": 8,
         "model_url": "assets/js/cb-blue-block-60x96.js",
         "xpos": 905.8690190229256,
@@ -776,7 +776,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "Media Console - White",
+        "item_name": "电视柜 - 白色",
         "item_type": 1,
         "model_url": "assets/js/cb-clapboard_baked.js",
         "xpos": 658.6568227980731,
@@ -789,7 +789,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "NYC Poster",
+        "item_name": "纽约海报",
         "item_type": 2,
         "model_url": "assets/js/nyc-poster2.js",
         "xpos": 1038.448276049687,
@@ -802,7 +802,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "Sofa - Grey",
+        "item_name": "沙发 - 灰色",
         "item_type": 1,
         "model_url": "assets/js/cb-rochelle-gray_baked.js",
         "xpos": 356.92671999154373,
@@ -815,7 +815,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "Coffee Table - Wood",
+        "item_name": "茶几 - 木质",
         "item_type": 1,
         "model_url": "assets/js/ik-stockholmcoffee-brown.js",
         "xpos": 468.479104587435,
@@ -828,7 +828,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "Window",
+        "item_name": "窗户",
         "item_type": 3,
         "model_url": "assets/js/whitewindow.js",
         "xpos": 374.7738207971076,
@@ -841,7 +841,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "Floor Lamp",
+        "item_name": "落地灯",
         "item_type": 1,
         "model_url": "assets/js/ore-3legged-white_baked.js",
         "xpos": 346.697102333121,
@@ -854,7 +854,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "Red Chair",
+        "item_name": "红色椅子",
         "item_type": 1,
         "model_url": "assets/js/ik-ekero-orange_baked.js",
         "xpos": 397.676038151142,
@@ -867,7 +867,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "Closed Door",
+        "item_name": "关闭的门",
         "item_type": 7,
         "model_url": "assets/js/closed-door28x80_baked.js",
         "xpos": 637.2176377788675,
@@ -880,7 +880,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "Bookshelf",
+        "item_name": "书架",
         "item_type": 1,
         "model_url": "assets/js/cb-kendallbookcasewalnut_baked.js",
         "xpos": 533.1460416453955,
@@ -893,7 +893,7 @@ $(document).ready(function() {
         "fixed": false
       },
       {
-        "item_name": "Full Bed",
+        "item_name": "双人床",
         "item_type": 1,
         "model_url": "assets/js/ik_nordli_full.js",
         "xpos": 939.5525544513545,
